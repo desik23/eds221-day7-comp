@@ -7,24 +7,79 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(lubridate)
 ```
 
-## R Markdown
+## Play around with functions in 'lubridate'
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+```{r}
+my_date <- "03-15-1998"
+class(my_date)
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
 
-```{r cars}
-summary(cars)
+
+
 ```
 
-## Including Plots
+ymd, mdy, dmy
 
-You can also embed plots, for example:
+```{r}
+my_date_new <- lubridate::mdy(my_date)
+class(my_date_new)
+```
+## Try converting the following to dates:
 
-```{r pressure, echo=FALSE}
-plot(pressure)
+-4/6/2005 (month, day, year)
+-20100806 (year, month, day)
+-12-Jun-1976
+-Your Birthday
+
+
+```{r}
+ex_1 <- lubridate::mdy("4/6/2005")
+ex_2 <- lubridate::ymd("20100806")
+ex_3 <- lubridate::dmy("12-Jun-1974")
+print(ex_1)
+
+lubridate::mdy(c("4/1/2006", "4-1-2005"))
+```
+```{r}
+time <- "2020-08-12 11:18"
+ex_5<- lubridate::ymd_hm(time)
+class(ex_5)
+
+time_la <- with_tz(ex_5, "America/Los_Angeles")
+
+
+time_syd <- "11-15-1995 16:20"
+
+ex_6 <- lubridate::mdy_hm(time_syd)
+
+time_syd_utc <- with_tz(ex_6, "Australia/Sydney")
+time_syd_utc
+
+lubridate::week(time_syd_utc)
+
+```
+```{r}
+my_bday <- lubridate::ymd("2015-11-11")
+
+wday(my_bday, label = TRUE)
+```
+```{r}
+urchin_counts <- tribble(
+  ~date, ~species, ~size_mm,
+  "10/3/2020", "purple", 55,
+  "10/4/2020", "red", 48,
+  "11/17/2020", "red", 67
+)
+
+urchin_counts_ymd <- urchin_counts %>% 
+  mutate(date = lubridate::mdy(date)) %>% 
+  mutate(year = year(date), 
+         month = month(date),
+         day = day(date))
+
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
