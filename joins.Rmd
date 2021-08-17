@@ -84,5 +84,6 @@ animals_semijoin <- semi_join(animals, sites, by = "location")
 
 ```{r}
 animals_antijoin <- anti_join(animals, sites)
+animals_antijoin2 <- anti_join(sites, animals)
 ```
 
